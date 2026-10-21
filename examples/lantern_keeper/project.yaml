@@ -1,0 +1,120 @@
+# The Lantern Keeper - example VoicingSoundscaping project.
+# Render a draft now:   vss render examples/lantern_keeper --draft
+# Full quality:         set up a backend (docs/SETUP.md), add reference clips (voices/README.md), then
+#                       vss render examples/lantern_keeper
+
+title: The Lantern Keeper
+author: VoicingSoundscaping contributors
+narrator_credit: The VSS ensemble
+language: en
+cover: null
+script: [script/*.vss]
+default_speaker: NARRATOR
+
+backends:
+  # The production voice. Unavailable backends fall back in order: fallback list -> draft -> espeak.
+  default: indextts
+  fallback: [fish, kokoro]
+  draft: kokoro
+  # Send the hardest vocal extremes to the most expressive model you run (Fish Drama 3 here).
+  routing:
+    hard: fish
+    sobbing: fish
+    scream: fish
+  config:
+    indextts:
+      repo_dir: ~/index-tts
+      python: ~/index-tts/.venv/bin/python
+      model_dir: ~/index-tts/checkpoints
+      version: "2.5"
+    fish:
+      url: http://127.0.0.1:8080
+      model: drama-3          # or s2-pro (24 GB GPU)
+    kokoro:
+      model: ~/models/kokoro/kokoro-v1.0.onnx
+      voices: ~/models/kokoro/voices-v1.0.bin
+    # Step-Audio-EditX polishing pass over IndexTTS (uncomment and set default: step_edit)
+    # step_edit:
+    #   base: indextts
+    #   repo_dir: ~/Step-Audio-EditX
+    #   python: ~/Step-Audio-EditX/.venv/bin/python
+    #   model_path: ~/models/Step-Audio-EditX
+    #   tokenizer_path: ~/models/Step-Audio-Tokenizer
+
+voices:
+  narrator:
+    description: Warm, mature storyteller in her fifties, gentle smile in the voice, unhurried and clear.
+    reference: voices/narrator/reference.wav
+    reference_text: "Every lighthouse keeps a story, and every story keeps a little light."
+    chain: narrator
+    options:
+      kokoro: {voice: bf_emma}
+      espeak: {voice: en-gb+f3, pitch: 45, wpm: 150}
+      qwen3: {speaker: Serena}
+  mira:
+    description: Bright, curious nine-year-old girl, quick and expressive.
+    reference: voices/mira/reference.wav
+    reference_text: "I'm not scared of the dark. I'm just very, very careful of it."
+    chain: child
+    options:
+      kokoro: {voice: af_sky}
+      espeak: {voice: en-us+f5, pitch: 75, wpm: 165}
+  tom:
+    description: Gravelly seventy-year-old lighthouse keeper, dry wit, kind underneath.
+    reference: voices/tom/reference.wav
+    reference_text: "Seventy years on this rock, and the sea still hasn't run out of things to say."
+    chain: deep
+    options:
+      kokoro: {voice: bm_george}
+      espeak: {voice: en-gb-scotland+m3, pitch: 30, wpm: 140}
+  pip:
+    description: A cheeky, fast-talking seagull with a raspy, comic voice.
+    reference: voices/pip/reference.wav
+    reference_text: "Excuse me, this is a private lantern. Seagulls only."
+    chain: dialog
+    options:
+      kokoro: {voice: am_puck}
+      espeak: {voice: en-us+m7, pitch: 80, wpm: 185}
+
+cast:
+  NARRATOR: {voice: narrator, default: storytelling 0.5}
+  MIRA: {voice: mira, default: curious 0.3}
+  TOM: {voice: tom, default: dry_humor 0.3}
+  PIP: {voice: pip, default: cheeky 0.5, pan: 0.25}
+
+banks:
+  emotions: banks/emotions      # shared emotion references (any speaker; IndexTTS keeps the timbre)
+  nonverbals: banks/nonverbals  # laugh/sigh/breath clips for backends without native nonverbals
+
+lexicon:
+  Pip: Pip
+  Gullhaven: GULL-hay-ven
+
+render:
+  takes: 2
+  max_takes: 4
+  breaths: procedural
+  narrator_in_space: false
+
+qa:
+  asr: none            # faster-whisper once installed (pip install "vss[qa]")
+  emotion_model: none  # emotion2vec once installed (pip install "vss[qa-emotion]")
+
+mix:
+  ambience_db: -12   # beds land ~16-22 dB under the voices (checked in QA_SHEET.md)
+  music_db: -11
+
+master:
+  preset: audiobook    # immersive master; use --preset acx for an Audible/ACX narration master
+
+assets:
+  generators:
+    music: [acestep, procedural]
+    sfx: [procedural]
+    ambience: [procedural]
+    config:
+      acestep: {type: acestep, url: "http://127.0.0.1:8001"}
+
+export:
+  formats: [wav, mp3, m4b]
+  captions: true

@@ -1,0 +1,12 @@
+# Chapter One: The Beginning
+
+## Somewhere quiet
+@scene ambience="forest_day:-6" space=outdoor_open
+@music start opening prompt="soft piano, hopeful, gentle" gain=-4 fade=4
+
+Once upon a time, in a place not so far from here, a story was waiting to be told.
+
+// Dialogue: SPEAKER (emotion intensity, delivery, "acting note"): text
+// Add speakers to cast: and voices: in project.yaml.
+NARRATOR (warm 0.6): And this is where it begins.
+@music stop fade=5

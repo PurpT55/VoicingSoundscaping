@@ -1,0 +1,130 @@
+VOICINGSOUNDSCAPING (vss) - 0_INDEX  ·  read me first, update me last (skill: vss-index)
+==========================================================================================
+STATUS 2026-10-21: v0.1 engine complete; 93 tests green (CPU, no network). End-to-end renders
+verified with espeak + Kokoro-82M (CPU) incl. procedural soundscapes, MP3/M4B/SRT/stems.
+GPU backends (IndexTTS-2.5, Fish S2/Drama 3, Qwen3, Chatterbox, Step-Audio-EditX) are coded and
+tested against mocks/fake engines, NOT yet run on real models (needs a GPU machine).
+
+VISION
+  A local, professional-grade audiobook and storytelling engine: voices with 80-90 %+ of human
+  emotional range (cry, whisper, scream, anger, tired, bored, cheeky, dry humor, peppy, frustrated,
+  joy, contentment, sleepy ...), immersive soundscapes and music, mastered to delivery standards.
+  No cloud APIs (no ElevenLabs/Suno): open models on your own machine. Purpose: share light,
+  good, memorable stories with family, friends and the world.
+
+GOALS (measurable)
+  G1 emotional range  >= 80-90 % of the 96-entry taxonomy at native/bank level on the project's backends
+  G2 authenticity     listening tests + automatic QA (ASR WER, emotion2vec) on every take
+  G3 sound            beds 14-26 dB under speech (measured), no masking, real spaces
+  G4 delivery         ACX-compliant master + immersive masters; M4B with chapters, captions
+  G5 continuity       any session can resume from this file + the skills in .claude/skills/
+
+COVERAGE (controllability, `vss emotions --markdown`)
+  IndexTTS-2.5 45.8 % -> 100 % with a full emotion bank | Fish S2-Pro 87.5 % | Fish Drama 3 100 %
+  Qwen3 instruct 87.5 % | Step-EditX over IndexTTS 59.4 % (+paralinguistics) | Kokoro/espeak 0 %
+
+MAP
+  0_Index.txt ............ this tracker          CLAUDE.md ......... session entry point
+  .claude/skills/ ........ vss-index vss-director vss-voices vss-emotion vss-soundscape
+                           vss-mastering-qa vss-backends vss-dev
+  docs/ .................. RESEARCH (models Oct 2026) ARCHITECTURE SCRIPT_FORMAT EMOTIONS SETUP PROJECT_CONFIG
+  src/vss/emotion ........ taxonomy(96+23) mapping coverage
+  src/vss/script ......... model parser normalize
+  src/vss/tts ............ base registry simple(placeholder/espeak/kokoro) indextts fish qwen3
+                           chatterbox openai_speech step_edit worker workers/*
+  src/vss/sound .......... procedural(41) library generators(acestep/command/http) resolve
+  src/vss/audio .......... io dsp loudness acx chain(chains+spaces) master(5 presets)
+  src/vss/mix ............ timeline (layout, ducking, mixdown, speech-to-bed)
+  src/vss/qa ............. scorers (signal, faster-whisper WER, emotion2vec)
+  src/vss/render ......... plan cache lint pipeline export      src/vss/cli.py ... `vss`
+  src/vss/voices/bank.py . emotion banks         src/vss/llm/annotate.py ... local-LLM drafting
+  examples/lantern_keeper  2-chapter original family story (all features)
+  examples/templates/starter  used by `vss new`
+  tests/ ................. pytest (emotion, script, audio, backends, generators, pipeline/CLI)
+
+QUICK COMMANDS
+  uv venv .venv && uv pip install --python .venv/bin/python -e ".[dev]"   (+ apt: ffmpeg espeak-ng)
+  .venv/bin/python -m pytest -q
+  vss doctor [project] · vss lint P -v · vss plan P --chapter 1 · vss render P [--draft] [--preset acx]
+  vss say "MIRA (whisper, afraid 0.7): hello?" --backend kokoro --project P
+  vss emotions --backend indextts fish --rows · vss bank list P -v · vss bank build P --backend fish
+  vss sounds · vss sound rain --seconds 20 · vss acx file.mp3 · vss annotate book.txt --llm URL
+
+WORKSTREAMS  ([x] done+verified  [~] partial  [ ] todo  [!] blocked  (gpu) verify on GPU)
+W1 Script & project
+  [x] W1.1 .vss format: chapters/scenes/directives/speaker lines/inline emotion/nonverbals/pauses/sfx/respell
+  [x] W1.2 parser diagnostics with suggestions; front matter; @narrator
+  [x] W1.3 normaliser (numbers, money, times, years, ordinals, abbreviations, lexicon) + chunking
+  [x] W1.4 project.yaml model with deep-merged defaults; lint (speakers, sounds, coverage, refs)
+  [ ] W1.5 per-word emphasis to backends that support it; SSML-like phoneme input (IndexTTS CMU phonemes)
+W2 Emotion
+  [x] W2.1 taxonomy 96 entries (51 emotion, 26 attitude, 6 state, 13 delivery) + 23 nonverbals
+  [x] W2.2 mappings: IndexTTS vector/alpha, Fish tags, instruct, Step edits, Chatterbox params, prosody
+  [x] W2.3 coverage model + `vss emotions` + routing (id/hard/kind/family)
+  [ ] W2.4 fill shared emotion bank (vss bank build --backend fish|qwen3) and/or record family voices (gpu)
+  [ ] W2.5 calibrate intensity->vector/alpha/exaggeration curves by listening + emotion2vec (gpu)
+  [ ] W2.6 perceptual test protocol (blind A/B per emotion, MOS sheet) to validate G1 beyond controllability
+W3 Voice backends
+  [x] W3.1 contract (Capabilities, VoiceSpec, Piece, SynthesisRequest), registry, fallbacks
+  [x] W3.2 worker runtime (one venv per model, JSON lines) + in-process mode
+  [x] W3.3 espeak, placeholder, Kokoro-onnx (verified on CPU)
+  [~] W3.4 IndexTTS-2/2.5 adapter (args unit-tested; real run (gpu))
+  [~] W3.5 Fish S2-Pro/Drama 3 msgpack adapter (mock-server tested; real run (gpu))
+  [~] W3.6 Qwen3-TTS (custom_voice/voice_design/clone) (args tested; real run (gpu))
+  [~] W3.7 Chatterbox original/turbo/nano/multilingual (args tested; real run (gpu))
+  [~] W3.8 Step-Audio-EditX refinement wrapper (fake-engine tested; real run (gpu))
+  [~] W3.9 generic OpenAI-compatible server (Higgs v3, MOSS, vLLM/SGLang-Omni) (mock tested)
+  [ ] W3.10 scene-level multi-speaker generation (Fish Drama 3 speaker tags / VibeVoice) for natural turn-taking
+  [ ] W3.11 parallel synthesis across servers/GPUs (thread pool per backend)
+W4 Soundscape & music
+  [x] W4.1 procedural engine: 41 sounds (beds, one-shots, breath, 8 mood pads), deterministic
+  [x] W4.2 library lookup (stems/tokens/variants), resolver with caching and looping
+  [~] W4.3 ACE-Step 1.5 client (mock tested; live server (gpu))
+  [~] W4.4 command/http generators for MOSS-SoundEffect v2 / Stable Audio / AudioX (tested with a script)
+  [ ] W4.5 listening pass + tuning of procedural sounds (birds, crowd, waves are the weakest)
+  [ ] W4.6 curated CC0 starter SFX pack (download script, licences recorded)
+W5 Mix, master, export
+  [x] W5.1 voice chains, spaces (19), sidechain ducking, speech-to-bed metric (14-26 dB window)
+  [x] W5.2 masters: acx/audiobook/podcast/cinematic/bedtime; true-peak-ish limiter; room tone
+  [x] W5.3 ACX checker; beds auto-off for acx; WAV/FLAC/MP3/M4B(chapters,cover)/SRT/stems
+  [ ] W5.4 loudness-matched chapter-to-chapter consistency report; mono ACX option
+W6 QA
+  [x] W6.1 best-of-N with signal scorer; take cache; QA_SHEET.md + render_report.json
+  [~] W6.2 faster-whisper WER + emotion2vec scorers (coded; untested with real models)
+  [ ] W6.3 speaker-similarity + MOS predictor (UTMOSv2 / Audiobox Aesthetics) scorers
+W7 Tooling & content
+  [x] W7.1 CLI: new lint plan render say doctor emotions sounds sound acx master bank annotate
+  [~] W7.2 local-LLM annotate + auto-repair (mock tested; try with Ollama qwen3)
+  [x] W7.3 example: The Lantern Keeper (2 chapters, wide emotional range, all features)
+  [ ] W7.4 reference voices for the example (designed/recorded) + full-quality render (gpu)
+  [ ] W7.5 simple web UI for families (pick story, voice, play) - later
+W8 Docs & skills
+  [x] W8.1 docs (6) + 8 internal skills + this index
+
+NEXT (ordered)
+  1. GPU box: install IndexTTS-2.5 + Fish S2-Pro (docs/SETUP.md), `vss doctor`, render the example; fix adapters (W3.4-3.5)
+  2. Build the shared emotion bank with Fish (or Qwen3), starting with the hard set; re-check coverage (W2.4)
+  3. Install faster-whisper + emotion2vec; render with takes=3; calibrate min_score from QA data (W6.2, W2.5)
+  4. Run ACE-Step 1.5 for the example's music cues; compare with procedural pads (W4.3)
+  5. Listening pass on procedural beds; tune the weakest (W4.5)
+  6. Design or record the 4 example voices; publish the first full-quality Lantern Keeper (W7.4)
+
+DECISIONS (append only)
+  2026-10-21 Local-only stack; cloud TTS/music APIs out of scope by design.
+  2026-10-21 Backend-agnostic emotion vocabulary; adapters render it (no model syntax in scripts).
+  2026-10-21 One venv per heavy model via JSON-lines workers; HTTP servers first-class.
+  2026-10-21 Default production voice IndexTTS-2.5 (cloning + disentangled emotion clips); Fish Drama 3/S2 for extremes via routing.
+  2026-10-21 Coverage = controllability metric; quality judged by listening + ASR/emotion QA.
+  2026-10-21 ACX master drops beds automatically (noise-floor rule); immersive presets keep them.
+  2026-10-21 Bed levels default ambience -12 / music -11 dB rel. dialog, ducking 6 dB -> ~20 dB speech-to-bed.
+
+KNOWN LIMITATIONS
+  - Real GPU models not exercised in this environment (HF downloads blocked; no GPU).
+  - Inline <sfx>/emotion shifts split synthesis units on non-inline backends (prosody seam risk).
+  - Procedural sounds are background quality; hero SFX want libraries or generators.
+  - Emotion coverage is computed from capabilities, not measured perception (see W2.6).
+
+SESSION LOG (append one line per session)
+  2026-10-21 S1: researched Oct-2026 open models; built engine v0.1 (taxonomy, parser, 9 backends,
+             procedural sound, mix/master/export, QA, CLI, docs, skills, example). 93 tests green; example
+             rendered with espeak + Kokoro (speech-to-bed ~20 dB, M4B chapters OK).

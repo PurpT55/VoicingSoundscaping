@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vss"
+version = "0.1.0"
+description = "VoicingSoundscaping: a local, professional-grade audiobook and storytelling engine (voices, emotion, soundscapes, music, mastering)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [{ name = "VoicingSoundscaping contributors" }]
+dependencies = [
+  "numpy>=1.24",
+  "scipy>=1.10",
+  "soundfile>=0.12",
+  "pyloudnorm>=0.1.1",
+  "pedalboard>=0.9",
+  "pyyaml>=6.0",
+  "num2words>=0.5.13",
+  "msgpack>=1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+# Fast CPU neural voice (drafts, proofing, kids' bedtime quickies)
+kokoro = ["kokoro-onnx>=0.4"]
+# In-process emotional TTS backends. Most of them pin torch/transformers and are best
+# installed in their OWN virtualenv; vss can then reach them through their local HTTP
+# servers (see docs/SETUP.md). These extras are for single-env setups.
+qwen3 = ["qwen-tts"]
+chatterbox = ["chatterbox-tts"]
+# Automatic quality control of takes
+qa = ["faster-whisper>=1.0", "jiwer>=3.0"]
+qa-emotion = ["funasr>=1.1", "modelscope"]
+
+[project.scripts]
+vss = "vss.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+vss = ["data/*.yaml", "data/*.txt"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

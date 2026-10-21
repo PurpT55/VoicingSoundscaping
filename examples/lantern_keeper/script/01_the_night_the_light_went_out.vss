@@ -1,0 +1,72 @@
+---
+chapter: The Night the Light Went Out
+---
+# Chapter One: The Night the Light Went Out
+
+## The keeper's kitchen
+@scene ambience="rain:-2, wind:-8, fire:-12" space=kitchen
+@music start home prompt="gentle acoustic guitar and soft cello, cosy, warm, rainy evening, slow" gain=-2 fade=5
+
+On a crooked little island called {Gullhaven|GULL-hay-ven}, at the very edge of the map, there stood a lighthouse with a red door and a kettle that was never quite cold.
+
+Mira had come to stay for the whole summer. On the third night, the sky decided to put on a show.
+@sfx thunder distance=0.7 gain=-4
+@pause 1.2
+
+MIRA (bored 0.7): Grandpa Tom, there is nothing to do. The rain has been raining for a hundred years. <sigh>
+TOM (dry_humor 0.6): Three hours, love. It only feels like a hundred when you count the drops.
+MIRA (peeved 0.5): I wasn't counting. [cheeky 0.5] I was up to four thousand and twelve.
+
+Grandpa Tom chuckled into his tea, and the fire answered him with a pop.
+
+TOM (warm 0.6): Tell you what. When the storm settles, I'll show you how the great lamp turns. Not many people get to see that.
+MIRA (excited 0.8): Really? Right up at the top? Promise?
+TOM (dry_humor 0.5): I never promise anything before my second biscuit.
+@pause 0.6
+
+@music stop fade=3
+@sfx thunder distance=0.15 gain=2 wait=true
+@ambience remove fire fade=0.6
+
+And then, all at once, the kitchen went dark. The lamp at the top of the tower, the one that had shone every single night for sixty years, went out.
+
+MIRA (whisper, afraid 0.7): Grandpa? Grandpa, the light. The ships can't see us.
+TOM (calm 0.7, authoritative 0.4): Steady now. Take my hand. We'll go up together, one step at a time.
+
+## The stairs
+@scene ambience="wind_storm:-6, rain_heavy:-10" space=stairwell
+@music start climb prompt="low tense strings, slow heartbeat pulse, suspense, dark" gain=-4 fade=6
+
+There were one hundred and twelve steps to the lantern room. Mira counted every one of them, out loud, in a very small voice.
+
+MIRA (whisper, anxious 0.6): Ninety-nine. One hundred. [whisper, afraid 0.8] Grandpa, something is moving up there.
+TOM (soft, mysterious 0.5): Probably just the wind. [dry_humor 0.4] Or a ghost with very poor manners.
+@sfx knock count=3 gain=-6 wait=true
+MIRA (scream 0.8): Aaah!
+
+## The lantern room
+@scene ambience="wind:-6, rain:-10" space=small_room
+@music stop fade=2
+
+PIP (peeved 0.8, projected): Do you mind? Some of us are trying to sleep! This is a private lantern. Seagulls only.
+MIRA (surprised 0.8): A seagull? [laughing] A talking seagull!
+PIP (smug 0.6): Not just any seagull. Pip. Keeper of the Lantern, Second Class. Very important position.
+TOM (dry_humor 0.7): He's been squatting up here since Easter. He pays his rent in feathers.
+
+The great lamp sat silent in its brass cradle. The wick had burned clean through.
+
+TOM (tired 0.6): My fingers aren't what they were. You'll have to thread it, Mira. Through the little ring, and tie it off.
+MIRA (frustrated 0.7): It won't go! It keeps slipping. <groan> Why won't this silly knot just behave?
+PIP (cheeky 0.7): Over, under, around the moon. Even a seagull knows that.
+MIRA (determined 0.7): Over... under... around the moon. [triumphant 0.8] I did it!
+
+Grandpa Tom struck a match. The flame caught, the great lens began to turn, and a long golden beam swept out across the angry sea.
+@sfx sparkle gain=-6
+@music start beam prompt="soaring warm orchestra, french horn and strings, hopeful, triumphant, sunrise" gain=0 fade=2
+
+Far out on the water, a ship's bell rang twice.
+@sfx bell pitch=330 gain=-8
+@sfx bell pitch=330 gain=-8 offset=1.1
+
+MIRA (awe 0.8): Grandpa... they saw us. They can see the way home.
+TOM (proud 0.6, tender 0.4): That they can, love. That they can.
