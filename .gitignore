@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+build/
+dist/
+
+# Render outputs and caches (regenerable)
+.vss_cache/
+**/out/
+**/renders/
+*.tmp.wav
+
+# Large model weights / downloaded assets live outside the repo
+models/
+checkpoints/
+*.onnx
+*.safetensors
+*.pth
+*.ckpt
+voices-v*.bin
+
+# Personal voice recordings are private by default (opt-in by force-adding)
+**/voices/**/*.wav
+**/voices/**/*.flac
+**/voices/**/*.mp3
+!examples/**/voices/README.md
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,36 @@
+# VoicingSoundscaping project. Full reference: docs/PROJECT_CONFIG.md
+title: My Story
+author: ""
+language: en
+script: [script/*.vss]
+default_speaker: NARRATOR
+
+backends:
+  default: kokoro          # indextts | fish | qwen3 | chatterbox | openai_speech | step_edit | kokoro | espeak
+  fallback: [espeak]
+  draft: espeak
+  routing: {}              # e.g. {hard: fish, scream: fish}
+  config:
+    kokoro: {model: ~/models/kokoro/kokoro-v1.0.onnx, voices: ~/models/kokoro/voices-v1.0.bin}
+
+voices:
+  narrator:
+    description: Warm, clear storyteller.
+    reference: voices/narrator/reference.wav
+    reference_text: ""
+    chain: narrator
+    options:
+      kokoro: {voice: af_heart}
+      espeak: {voice: en-gb}
+
+cast:
+  NARRATOR: {voice: narrator, default: storytelling 0.5}
+
+banks:
+  emotions: banks/emotions
+
+master:
+  preset: acx
+
+export:
+  formats: [wav, mp3, m4b]

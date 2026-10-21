@@ -1,0 +1,25 @@
+# Chapter Two: Stars Over the Sea
+
+## After the storm
+@scene ambience="sea_waves:-4, night:-12" space=outdoor_open
+@music start stars prompt="music box and soft felt piano lullaby, gentle, starry night, very slow" gain=-3 fade=8
+
+By midnight the storm had tired itself out. The clouds rolled away like a blanket kicked off a bed, and the sky was suddenly full of stars.
+
+Mira and Grandpa Tom sat on the gallery outside the lantern room, wrapped in one enormous scratchy blanket. Pip was asleep on the railing, one eye not quite closed.
+
+MIRA (sleepy 0.5): Grandpa? Do you ever get lonely up here? <yawn>
+TOM (wistful 0.6): Sometimes. Your grandmother used to sit right where you're sitting. She said the stars were just lighthouses that had wandered too far from home.
+MIRA (sympathetic 0.6, soft): You miss her.
+TOM (crying 0.4, tender 0.5): Every single night. <sniff> [grateful 0.6] But tonight the light came back on. And it was you who did it.
+
+Mira leaned her head against his shoulder. Somewhere below, the sea breathed in, and out, and in again.
+
+PIP (sleepy 0.7, murmur): Lovely speech. Very moving. Now kindly hush, the Keeper of the Lantern needs his beauty sleep. <yawn>
+MIRA (giggly 0.6, whisper): Goodnight, Pip.
+TOM (content 0.8, gentle): Goodnight, little keeper.
+
+And high above them, the great lamp turned, and turned, and turned, sending its golden light out across the quiet water, to anyone who might be looking for the way home.
+@pause 1.5
+NARRATOR (storytelling 0.4, warm 0.5): The end.
+@music stop fade=6
